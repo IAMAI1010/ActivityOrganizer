@@ -64,8 +64,11 @@ function describeServiceError(error) {
         const host = typeof location !== 'undefined' ? location.host : '当前域名'
         return `地图 key 未授权 ${host}，请把这个域名加进腾讯位置服务的 WebServiceAPI 域名白名单`
     }
+    if (status === 199) return '这个地图 key 没有启用 WebServiceAPI，请在控制台给 key 勾选该项'
     if (status === 111 || status === 112) return '地图 key 已过期或被停用，请到腾讯位置服务检查'
-    if (status === 120 || status === 121) return '地图接口今日调用额度已用完'
+    if (status === 120 || status === 121) {
+        return '地图接口额度为 0 或今日已用完：到控制台「配额管理 → 账户额度 → 一键分配」，把额度分给这个 key'
+    }
     return '地址解析失败，可以手动填写地点名称'
 }
 
