@@ -19,7 +19,7 @@
     "enhance": true,
     "minified": true,
     "postcss": true,
-    "urlCheck": true,
+    "urlCheck": false,
     "packNpmManually": true,
     "packNpmRelationList": [
       {
@@ -29,7 +29,7 @@
     ]
   },
   "compileType": "miniprogram",
-  "appid": "touristappid",
+  "appid": "wx35d82118c27b18b5",
   "projectname": "activity-organizer",
   "miniprogramRoot": "./"
 }
