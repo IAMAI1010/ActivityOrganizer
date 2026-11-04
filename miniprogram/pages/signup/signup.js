@@ -4,6 +4,14 @@ const { pageTheme } = require('../../utils/theme');
 
 const PHONE_RE = /^1\d{10}$/;
 
+// 下拉字段的值存在 pickerText，输入类字段存在 value，统一取文本再判断。
+function fieldText(field) {
+    if (!field) return '';
+    const raw = field.type === 'select' ? field.pickerText : field.value;
+    if (raw === undefined || raw === null) return '';
+    return String(raw).trim();
+}
+
 Page({
     data: {
         activityId: '',
@@ -102,9 +110,10 @@ Page({
         if (phone && !PHONE_RE.test(phone)) {
             return { message: '手机号格式不对，请填写 11 位手机号，或留空。', key: 'phone' };
         }
-        const missing = this.data.fields.find(field => field.required && !String(field.value || '').trim());
+        const missing = this.data.fields.find(field => field.required && !fieldText(field));
         if (missing) {
-            return { message: `请填写「${missing.label}」。`, key: missing.key };
+            const verb = missing.type === 'select' ? '请选择' : '请填写';
+            return { message: `${verb}「${missing.label}」。`, key: missing.key };
         }
         return null;
     },
@@ -112,9 +121,9 @@ Page({
     buildAnswers() {
         const answers = {};
         this.data.fields.forEach(field => {
-            const value = field.type === 'select' ? field.pickerText : field.value;
-            if (value !== undefined && value !== null && String(value).trim() !== '') {
-                answers[field.key] = String(value).trim();
+            const value = fieldText(field);
+            if (value !== '') {
+                answers[field.key] = value;
             }
         });
         return answers;
