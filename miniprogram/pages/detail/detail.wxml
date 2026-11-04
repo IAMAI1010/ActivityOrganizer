@@ -15,7 +15,23 @@
     <block wx:else>
         <view class="tip-banner" wx:if="{{submittedTip}}">报名成功，期待你的参与。</view>
 
-        <view class="cover" wx:if="{{activity.cover_url}}">
+        <view class="poster" wx:if="{{poster}}" style="{{poster.style}}">
+            <view class="poster-shape" wx:for="{{poster.shapes}}" wx:key="id" style="{{item.style}}"></view>
+            <view class="poster-body">
+                <text class="poster-badge" wx:if="{{poster.badge}}" style="{{poster.badgeStyle}}">{{poster.badge}}</text>
+                <view class="poster-main">
+                    <text class="poster-headline" style="color:{{poster.ink}}">{{poster.headline}}</text>
+                    <view class="poster-rule" style="{{poster.ruleStyle}}"></view>
+                    <text class="poster-subhead" wx:if="{{poster.subhead}}" style="color:{{poster.dim}}">{{poster.subhead}}</text>
+                </view>
+                <view class="poster-foot">
+                    <text class="poster-org" style="color:{{poster.dim}}" wx:if="{{activity.owner_name}}">组织者 {{activity.owner_name}}</text>
+                    <text class="poster-chip" style="{{poster.chipStyle}}">{{poster.footer}}</text>
+                </view>
+            </view>
+        </view>
+
+        <view class="cover" wx:elif="{{activity.cover_url}}">
             <image class="cover-image" src="{{activity.cover_url}}" mode="aspectFill"></image>
         </view>
 

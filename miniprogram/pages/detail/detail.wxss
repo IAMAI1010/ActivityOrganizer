@@ -8,6 +8,77 @@
     border: 2rpx solid var(--line);
 }
 
+/* 海报封面：与网页端共用同一份配方，纯样式渲染，不依赖图片 */
+.poster {
+    position: relative;
+    width: 100%;
+    height: 720rpx;
+    border-radius: 28rpx;
+    overflow: hidden;
+    margin-bottom: 24rpx;
+    padding: 52rpx 44rpx;
+    box-sizing: border-box;
+}
+
+.poster-shape {
+    position: absolute;
+}
+
+.poster-body {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.poster-badge {
+    align-self: flex-start;
+    font-size: 22rpx;
+    line-height: 1;
+    padding: 14rpx 24rpx;
+    border-radius: 999rpx;
+}
+
+.poster-headline {
+    display: block;
+    font-size: 60rpx;
+    font-weight: 700;
+    line-height: 1.28;
+    letter-spacing: 1rpx;
+}
+
+.poster-rule {
+    width: 96rpx;
+    height: 8rpx;
+    border-radius: 999rpx;
+    margin: 26rpx 0 20rpx;
+}
+
+.poster-subhead {
+    display: block;
+    font-size: 26rpx;
+    line-height: 1.55;
+}
+
+.poster-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16rpx;
+}
+
+.poster-org {
+    font-size: 22rpx;
+}
+
+.poster-chip {
+    font-size: 24rpx;
+    font-weight: 600;
+    padding: 16rpx 30rpx;
+    border-radius: 999rpx;
+}
+
 .cover-image {
     width: 100%;
     height: 100%;

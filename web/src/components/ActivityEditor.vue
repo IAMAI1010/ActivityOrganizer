@@ -1,7 +1,9 @@
 <script setup>
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, nextTick, reactive, ref, watch } from 'vue'
 import { createActivity, updateActivity, deleteActivity } from '../api'
 import { formatRange, fromLocalInput, toLocalInput } from '../format'
+import { downloadPoster, renderPoster } from '../poster'
+import AiBar from './AiBar.vue'
 
 const props = defineProps({
     activity: { type: Object, default: null },
@@ -16,6 +18,7 @@ const draft = reactive({
     start_at: '',
     end_at: '',
     cover_url: '',
+    cover_spec: null,
     status: 'published',
 })
 
@@ -23,6 +26,9 @@ const fields = ref([])
 const saving = ref(false)
 const removing = ref(false)
 const errorMessage = ref('')
+const introUndo = ref('')
+const previewCanvas = ref(null)
+const posterCanvas = ref(null)
 
 const isEditing = computed(() => Boolean(props.activity && props.activity.id))
 
@@ -33,6 +39,7 @@ function loadFrom(activity) {
     draft.start_at = activity ? toLocalInput(activity.start_at) : ''
     draft.end_at = activity ? toLocalInput(activity.end_at) : ''
     draft.cover_url = activity ? activity.cover_url || '' : ''
+    draft.cover_spec = activity && activity.cover_spec ? activity.cover_spec : null
     draft.status = activity ? activity.status || 'published' : 'published'
     const raw = activity && Array.isArray(activity.form_fields) ? activity.form_fields : []
     fields.value = raw.map((field, index) => ({
@@ -63,6 +70,87 @@ function removeField(index) {
 
 const previewRange = computed(() => formatRange(fromLocalInput(draft.start_at), fromLocalInput(draft.end_at)))
 
+const posterMeta = computed(() => ({ title: draft.title, organizer: props.ownerName }))
+const showPoster = computed(() => Boolean(draft.cover_spec) && !draft.cover_url.trim())
+
+function paintPosters() {
+    nextTick(() => {
+        if (!showPoster.value) return
+        if (previewCanvas.value) renderPoster(previewCanvas.value, draft.cover_spec, posterMeta.value)
+        if (posterCanvas.value) renderPoster(posterCanvas.value, draft.cover_spec, posterMeta.value)
+    })
+}
+
+watch(() => [draft.cover_spec, draft.title, draft.cover_url], paintPosters, { deep: true })
+
+function applyExtract(data) {
+    if (data.title) draft.title = data.title
+    if (data.location) draft.location = data.location
+    if (data.startAt) draft.start_at = data.startAt
+    if (data.endAt) draft.end_at = data.endAt
+    if (data.description) draft.description = data.description
+    if (Array.isArray(data.fields) && data.fields.length) {
+        fields.value = data.fields.map((field) => ({
+            key: field.key,
+            label: field.label,
+            type: field.type,
+            required: field.required === true,
+            optionsText: (field.options || []).join('、'),
+        }))
+    }
+    if (!draft.cover_spec) {
+        const when = [draft.start_at ? draft.start_at.slice(5, 10).replace('-', '月') + '日' : '', draft.location]
+            .filter(Boolean)
+            .join(' · ')
+        draft.cover_spec = {
+            id: 'variant_auto',
+            theme: data.theme,
+            motif: data.motif,
+            badge: draft.start_at ? formatBadge(draft.start_at) : '',
+            headline: data.title || draft.title,
+            subhead: when,
+            footer: '扫码报名',
+        }
+    }
+    errorMessage.value = ''
+    paintPosters()
+}
+
+function formatBadge(value) {
+    if (!value) return ''
+    const date = new Date(value)
+    if (Number.isNaN(date.getTime())) return ''
+    const week = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][date.getDay()]
+    const pad = (n) => String(n).padStart(2, '0')
+    return `${date.getMonth() + 1}月${date.getDate()}日 ${week} ${pad(date.getHours())}:${pad(date.getMinutes())}`
+}
+
+function applyIntro(text) {
+    if (!text) return
+    introUndo.value = draft.description
+    draft.description = text
+}
+
+function undoIntro() {
+    draft.description = introUndo.value
+    introUndo.value = ''
+}
+
+function applyPoster(variant) {
+    draft.cover_spec = variant
+    draft.cover_url = ''
+    paintPosters()
+}
+
+function clearPoster() {
+    draft.cover_spec = null
+}
+
+function downloadCurrentPoster() {
+    if (!draft.cover_spec) return
+    downloadPoster(draft.cover_spec, posterMeta.value, `${draft.title || '活动'}-封面.png`)
+}
+
 function buildPayload() {
     return {
         title: draft.title.trim(),
@@ -71,6 +159,7 @@ function buildPayload() {
         start_at: fromLocalInput(draft.start_at),
         end_at: fromLocalInput(draft.end_at),
         cover_url: draft.cover_url.trim() || null,
+        cover_spec: draft.cover_spec || null,
         status: draft.status,
         form_fields: fields.value
             .filter((field) => field.label.trim())
@@ -152,6 +241,14 @@ async function remove() {
 
         <div class="editor-grid">
             <div>
+                <AiBar
+                    :draft="draft"
+                    :organizer="ownerName"
+                    @apply-extract="applyExtract"
+                    @apply-intro="applyIntro"
+                    @apply-poster="applyPoster"
+                />
+
                 <div class="panel">
                     <div class="panel-head">
                         <div>
@@ -191,18 +288,41 @@ async function remove() {
                     </div>
 
                     <div class="field">
-                        <label class="label" for="ed-cover">封面图链接</label>
+                        <div class="cover-head">
+                            <label class="label" for="ed-cover" style="margin-bottom: 0">封面</label>
+                            <div class="cover-tools">
+                                <button class="btn btn-outline btn-sm" type="button" :disabled="!draft.cover_spec" @click="downloadCurrentPoster">
+                                    下载封面
+                                </button>
+                                <button class="btn btn-ghost btn-sm" type="button" :disabled="!draft.cover_spec" @click="clearPoster">
+                                    清除
+                                </button>
+                            </div>
+                        </div>
+
+                        <div v-if="showPoster" class="cover-poster">
+                            <canvas ref="posterCanvas" class="cover-poster-canvas"></canvas>
+                            <p class="hint">
+                                这张封面由 AI 定配色与排版、本地实时绘制，小程序里用同一份配方渲染，改文字会自动跟着变。
+                            </p>
+                        </div>
+
                         <input
                             id="ed-cover"
                             v-model="draft.cover_url"
                             class="input"
-                            placeholder="https://… 粘贴一个公开可访问的图片地址"
+                            placeholder="也可以直接粘贴一个公开图片地址"
                         />
-                        <p class="hint">小程序端按此地址加载封面；留空则显示纯色占位。</p>
+                        <p class="hint">填了图片地址就用图片；留空则用上面的 AI 封面或纯色占位。</p>
                     </div>
 
                     <div class="field" style="margin-bottom: 0">
-                        <label class="label" for="ed-desc">活动介绍</label>
+                        <div class="cover-head">
+                            <label class="label" for="ed-desc" style="margin-bottom: 0">活动介绍</label>
+                            <button v-if="introUndo" class="btn btn-ghost btn-sm" type="button" @click="undoIntro">
+                                还原为改写前
+                            </button>
+                        </div>
                         <textarea
                             id="ed-desc"
                             v-model="draft.description"
@@ -279,9 +399,11 @@ async function remove() {
                 <div class="preview-card">
                     <div
                         class="preview-cover"
+                        :class="{ 'has-poster': showPoster }"
                         :style="draft.cover_url ? { backgroundImage: `url(${draft.cover_url})` } : null"
                     >
-                        <span v-if="!draft.cover_url">未设置封面</span>
+                        <canvas v-if="showPoster" ref="previewCanvas" class="preview-poster"></canvas>
+                        <span v-else-if="!draft.cover_url">未设置封面</span>
                     </div>
                     <div class="preview-body">
                         <div class="preview-title">{{ draft.title || '活动标题' }}</div>

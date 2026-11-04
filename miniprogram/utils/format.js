@@ -41,6 +41,7 @@ function toDisplayActivity(row) {
         description: row.description || '',
         location: row.location || '',
         cover_url: row.cover_url || '',
+        cover_spec: row.cover_spec || null,
         owner_name: row.owner_name || '',
         status: row.status || 'published',
         closed: row.status === 'ended',

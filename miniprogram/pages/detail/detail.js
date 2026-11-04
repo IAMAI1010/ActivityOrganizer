@@ -1,6 +1,7 @@
 const { fetchActivity, listSignupBriefs, isSignedUp } = require('../../utils/data');
 const { toDisplayActivity } = require('../../utils/format');
 const { pageTheme } = require('../../utils/theme');
+const { buildPoster } = require('../../utils/poster');
 
 function toSignupView(row) {
     const name = (row && row.nickname) ? String(row.nickname) : '微信好友';
@@ -17,6 +18,7 @@ Page({
         activityId: '',
         viewState: 'loading',
         activity: null,
+        poster: null,
         signups: [],
         signupCount: 0,
         signedUp: false,
@@ -66,6 +68,7 @@ Page({
         this.setData({
             viewState: 'ready',
             activity,
+            poster: buildPoster(activity.cover_spec),
             signedUp: isSignedUp(activity.id),
         });
         this.loadSignups();
