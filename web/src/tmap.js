@@ -44,12 +44,29 @@ export function loadTMap(key, { timeout = 12000 } = {}) {
     return pending
 }
 
-// 坐标转地址。失败不抛出，返回空字符串由调用方决定是否保留用户已填地址。
+// 坐标转地址。失败时抛出带原因的 Error，交给调用方展示，不要吞掉鉴权类错误。
 export async function reverseGeocode(TMap, latitude, longitude) {
     const geocoder = new TMap.service.Geocoder()
-    const response = await geocoder.getAddress({ location: new TMap.LatLng(latitude, longitude) })
+    let response
+    try {
+        response = await geocoder.getAddress({ location: new TMap.LatLng(latitude, longitude) })
+    } catch (error) {
+        throw new Error(describeServiceError(error))
+    }
     const detail = response && (response.result || response)
     return (detail && detail.address) || ''
+}
+
+// 腾讯 WebService 的常见失败码翻译成人话，省得对着一串 status 猜。
+function describeServiceError(error) {
+    const status = error && (error.status || (error.data && error.data.status))
+    if (status === 110) {
+        const host = typeof location !== 'undefined' ? location.host : '当前域名'
+        return `地图 key 未授权 ${host}，请把这个域名加进腾讯位置服务的 WebServiceAPI 域名白名单`
+    }
+    if (status === 111 || status === 112) return '地图 key 已过期或被停用，请到腾讯位置服务检查'
+    if (status === 120 || status === 121) return '地图接口今日调用额度已用完'
+    return '地址解析失败，可以手动填写地点名称'
 }
 
 export function toCoord(value) {

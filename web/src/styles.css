@@ -1411,3 +1411,7 @@ table.signups tr:last-child td {
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 12px;
 }
+
+.map-error-inline {
+    margin: 8px 0 0;
+}

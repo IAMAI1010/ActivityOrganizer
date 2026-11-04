@@ -21,6 +21,7 @@ const hint = ref('')
 const needKey = ref(false)
 const keyInput = ref('')
 const geocoding = ref(false)
+const geocodeError = ref('')
 const locating = ref(false)
 const picked = ref({ address: '', latitude: null, longitude: null })
 
@@ -63,11 +64,12 @@ async function setPoint(latitude, longitude, presetAddress) {
     if (presetAddress !== undefined) return
 
     geocoding.value = true
+    geocodeError.value = ''
     try {
         const address = await reverseGeocode(TMap, latitude, longitude)
         if (address) picked.value = { ...picked.value, address }
     } catch (failure) {
-        hint.value = '没能自动解析地址，你可以在下面手动补充地点名称。'
+        geocodeError.value = (failure && failure.message) || '地址解析失败，可以手动填写地点名称'
     } finally {
         geocoding.value = false
     }
@@ -211,6 +213,7 @@ onBeforeUnmount(destroyMap)
                 <div v-if="error" class="map-error">{{ error }}</div>
                 <div v-if="loading" class="map-loading">地图加载中…</div>
                 <div ref="containerRef" class="map-canvas"></div>
+                <div v-if="geocodeError" class="map-error map-error-inline">{{ geocodeError }}</div>
                 <p v-if="hint" class="hint map-hint">{{ hint }}</p>
             </template>
 
