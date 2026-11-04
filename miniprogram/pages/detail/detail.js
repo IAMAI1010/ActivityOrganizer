@@ -86,6 +86,10 @@ Page({
     },
 
     goSignup() {
+        if (this.data.activity && this.data.activity.closed) {
+            wx.showToast({ title: '活动已结束，不再接受报名', icon: 'none' });
+            return;
+        }
         if (this.data.signedUp) {
             wx.showToast({ title: '你已报名这场活动', icon: 'none' });
             return;

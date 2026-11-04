@@ -51,7 +51,9 @@
         <view class="signed-badge" wx:if="{{signedUp}}">你已经报名了这场活动</view>
 
         <view class="action-bar">
-            <button class="primary-button action-main" bindtap="goSignup" disabled="{{signedUp}}">{{signedUp ? '已报名' : '立即报名'}}</button>
+            <button wx:if="{{activity.closed}}" class="primary-button action-main" disabled>活动已结束</button>
+            <button wx:elif="{{signedUp}}" class="primary-button action-main" bindtap="goSignup" disabled>已报名</button>
+            <button wx:else class="primary-button action-main" bindtap="goSignup">立即报名</button>
             <button class="ghost-button action-share" open-type="share">分享到群</button>
         </view>
 

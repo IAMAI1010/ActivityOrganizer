@@ -42,6 +42,8 @@ function toDisplayActivity(row) {
         location: row.location || '',
         cover_url: row.cover_url || '',
         owner_name: row.owner_name || '',
+        status: row.status || 'published',
+        closed: row.status === 'ended',
         start_at: row.start_at,
         end_at: row.end_at,
         dateText: formatDateText(row.start_at),
