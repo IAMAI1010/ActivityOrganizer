@@ -1,5 +1,6 @@
 const { fetchActivity, createSignup, rememberSignup } = require('../../utils/data');
 const { toDisplayActivity } = require('../../utils/format');
+const { pageTheme } = require('../../utils/theme');
 
 const PHONE_RE = /^1\d{10}$/;
 
@@ -15,6 +16,11 @@ Page({
         submitting: false,
         errorMessage: '',
         errorKey: '',
+        theme: 'light',
+    },
+
+    onShow() {
+        this.setData({ theme: pageTheme() });
     },
 
     onLoad(query) {

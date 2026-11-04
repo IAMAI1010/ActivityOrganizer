@@ -7,18 +7,19 @@
 .page-title {
     font-size: 40rpx;
     font-weight: 600;
+    color: var(--ink);
 }
 
 .page-subtitle {
     margin-top: 12rpx;
     font-size: 24rpx;
-    color: #8a9099;
+    color: var(--muted);
     line-height: 1.7;
 }
 
 .state-icon {
     font-size: 52rpx;
-    color: #2f6ae0;
+    color: var(--accent);
     margin-bottom: 12rpx;
 }
 

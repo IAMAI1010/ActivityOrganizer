@@ -1,5 +1,6 @@
 const { listRecentActivities, listLocalSignups } = require('../../utils/data');
 const { toDisplayActivity } = require('../../utils/format');
+const { THEME_OPTIONS, pageTheme, saveTheme } = require('../../utils/theme');
 
 Page({
     data: {
@@ -7,11 +8,18 @@ Page({
         activities: [],
         errorMessage: '',
         signedCount: 0,
+        theme: 'light',
+        themeOptions: THEME_OPTIONS,
     },
 
     onShow() {
-        this.setData({ signedCount: listLocalSignups().length });
+        this.setData({ signedCount: listLocalSignups().length, theme: pageTheme() });
         this.loadActivities();
+    },
+
+    onThemeChange(event) {
+        const key = event.currentTarget.dataset.key;
+        this.setData({ theme: saveTheme(key) });
     },
 
     onPullDownRefresh() {

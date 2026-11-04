@@ -1,4 +1,4 @@
-<view class="page">
+<view class="page theme-{{theme}}">
     <view class="hero">
         <text class="eyebrow">ACTIVITY ORGANIZER</text>
         <text class="title">活动报名</text>
@@ -11,6 +11,19 @@
             <text class="entry-value">{{signedCount}} 场</text>
         </view>
         <text class="entry-arrow">›</text>
+    </view>
+
+    <view class="theme-bar">
+        <text class="theme-bar-label">界面配色</text>
+        <view class="theme-options">
+            <view
+                wx:for="{{themeOptions}}"
+                wx:key="key"
+                class="theme-option {{theme === item.key ? 'active' : ''}}"
+                data-key="{{item.key}}"
+                bindtap="onThemeChange"
+            >{{item.label}}</view>
+        </view>
     </view>
 
     <view class="section-head">

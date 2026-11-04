@@ -7,7 +7,7 @@
 .form-eyebrow {
     font-size: 23rpx;
     letter-spacing: 3rpx;
-    color: #8a9099;
+    color: var(--faint);
 }
 
 .form-title {
@@ -15,14 +15,15 @@
     font-size: 40rpx;
     font-weight: 600;
     line-height: 1.4;
+    color: var(--ink);
 }
 
 .error-banner {
     padding: 22rpx 26rpx;
     margin-bottom: 20rpx;
     border-radius: 18rpx;
-    background: #fdecec;
-    color: #c0392b;
+    background: var(--danger-soft);
+    color: var(--danger);
     font-size: 25rpx;
     line-height: 1.6;
 }
@@ -31,7 +32,7 @@
     display: flex;
     flex-direction: column;
     padding: 20rpx 0;
-    border-bottom: 2rpx solid #f0f2f5;
+    border-bottom: 2rpx solid var(--line);
 }
 
 .field:last-child {
@@ -40,12 +41,12 @@
 
 .field-label {
     font-size: 27rpx;
-    color: #3f4650;
+    color: var(--ink-soft);
     margin-bottom: 14rpx;
 }
 
 .required {
-    color: #d64545;
+    color: var(--danger);
     margin-left: 6rpx;
 }
 
@@ -53,13 +54,17 @@
     height: 76rpx;
     padding: 0 22rpx;
     border-radius: 14rpx;
-    background: #f7f8fa;
+    border: 2rpx solid var(--line);
+    background: var(--surface-soft);
+    color: var(--ink);
     font-size: 28rpx;
-    line-height: 76rpx;
+    line-height: 72rpx;
+    box-sizing: border-box;
 }
 
 .field-input-error {
-    background: #fdecec;
+    border-color: var(--danger);
+    background: var(--danger-soft);
 }
 
 .field-textarea {
@@ -68,20 +73,22 @@
     padding: 18rpx 22rpx;
     box-sizing: border-box;
     border-radius: 14rpx;
-    background: #f7f8fa;
+    border: 2rpx solid var(--line);
+    background: var(--surface-soft);
+    color: var(--ink);
     font-size: 28rpx;
 }
 
 .picker-value {
     display: flex;
     align-items: center;
-    color: #3f4650;
+    color: var(--ink-soft);
 }
 
 .field-hint {
     margin-top: 10rpx;
     font-size: 22rpx;
-    color: #9aa1ab;
+    color: var(--faint);
 }
 
 .submit-button {
@@ -90,6 +97,6 @@
 
 .state-icon {
     font-size: 52rpx;
-    color: #2f6ae0;
+    color: var(--accent);
     margin-bottom: 12rpx;
 }

@@ -1,10 +1,12 @@
 const { listLocalSignups } = require('../../utils/data');
 const { formatTimeRange } = require('../../utils/format');
+const { pageTheme } = require('../../utils/theme');
 
 Page({
     data: {
         viewState: 'loading',
         items: [],
+        theme: 'light',
     },
 
     onShow() {
@@ -18,6 +20,7 @@ Page({
         this.setData({
             viewState: items.length === 0 ? 'empty' : 'ready',
             items,
+            theme: pageTheme(),
         });
     },
 

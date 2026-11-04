@@ -6,3 +6,6 @@ dist/
 # 云服务与应用发布的本地标记文件
 .wbapp_*.genie
 .workbuddy/
+
+# 本地视觉自检页（仅开发机使用）
+web/.preview/

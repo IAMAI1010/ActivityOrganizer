@@ -1,5 +1,6 @@
 const { fetchActivity, listSignupBriefs, isSignedUp } = require('../../utils/data');
 const { toDisplayActivity } = require('../../utils/format');
+const { pageTheme } = require('../../utils/theme');
 
 function toSignupView(row) {
     const name = (row && row.nickname) ? String(row.nickname) : '微信好友';
@@ -21,6 +22,7 @@ Page({
         signedUp: false,
         submittedTip: false,
         errorMessage: '',
+        theme: 'light',
     },
 
     onLoad(query) {
@@ -41,6 +43,7 @@ Page({
     },
 
     onShow() {
+        this.setData({ theme: pageTheme() });
         if (!this.data.activityId) return;
         this.setData({ signedUp: isSignedUp(this.data.activityId) });
     },

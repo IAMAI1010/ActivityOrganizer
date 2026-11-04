@@ -153,6 +153,13 @@ async function remove() {
         <div class="editor-grid">
             <div>
                 <div class="panel">
+                    <div class="panel-head">
+                        <div>
+                            <div class="panel-title">基本信息</div>
+                            <div class="panel-sub">标题必填，时间和地点会显示在活动卡上。</div>
+                        </div>
+                    </div>
+
                     <div class="field">
                         <label class="label" for="ed-title">活动标题<span class="req">*</span></label>
                         <input id="ed-title" v-model="draft.title" class="input" placeholder="例如：周末徒步：梧桐山轻量线" />
@@ -169,9 +176,18 @@ async function remove() {
                         </div>
                     </div>
 
-                    <div class="field">
+                    <div class="field" style="margin-bottom: 0">
                         <label class="label" for="ed-location">活动地点</label>
                         <input id="ed-location" v-model="draft.location" class="input" placeholder="例如：梧桐山北门集合点" />
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-head">
+                        <div>
+                            <div class="panel-title">活动内容</div>
+                            <div class="panel-sub">封面图与介绍会一起出现在小程序的活动详情页。</div>
+                        </div>
                     </div>
 
                     <div class="field">
@@ -230,8 +246,15 @@ async function remove() {
                 </div>
 
                 <div class="panel">
+                    <div class="panel-head">
+                        <div>
+                            <div class="panel-title">发布状态</div>
+                            <div class="panel-sub">草稿只有你自己能看到；已结束会停止接收报名。</div>
+                        </div>
+                    </div>
+
                     <div class="field" style="margin-bottom: 0">
-                        <label class="label" for="ed-status">状态</label>
+                        <label class="label" for="ed-status">当前状态</label>
                         <select id="ed-status" v-model="draft.status" class="select">
                             <option value="published">已发布（好友可以报名）</option>
                             <option value="draft">草稿（仅自己可见）</option>

@@ -4,7 +4,8 @@
     border-radius: 24rpx;
     overflow: hidden;
     margin-bottom: 24rpx;
-    background: #e8ecf4;
+    background: var(--surface-soft);
+    border: 2rpx solid var(--line);
 }
 
 .cover-image {
@@ -14,7 +15,7 @@
 
 .state-icon {
     font-size: 52rpx;
-    color: #2f6ae0;
+    color: var(--accent);
     margin-bottom: 12rpx;
 }
 
@@ -22,14 +23,15 @@
     padding: 24rpx 28rpx;
     margin-bottom: 24rpx;
     border-radius: 20rpx;
-    background: #e7f6ec;
-    color: #2f7a4a;
+    background: var(--ok-soft);
+    color: var(--ok);
     font-size: 27rpx;
 }
 
 .block-title {
     font-size: 30rpx;
     font-weight: 600;
+    color: var(--ink);
 }
 
 .description {
@@ -37,7 +39,7 @@
     margin-top: 16rpx;
     font-size: 27rpx;
     line-height: 1.8;
-    color: #3f4650;
+    color: var(--ink-soft);
     white-space: pre-wrap;
 }
 
@@ -53,21 +55,21 @@
     padding: 10rpx 20rpx 10rpx 12rpx;
     margin: 0 16rpx 16rpx 0;
     border-radius: 999rpx;
-    background: #f2f5fb;
+    background: var(--chip-bg);
 }
 
 .avatar {
     width: 44rpx;
     height: 44rpx;
     border-radius: 50%;
-    background: #d7e2f7;
+    background: var(--avatar-bg);
 }
 
 .avatar-text {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #2f6ae0;
+    color: var(--accent-strong);
     font-size: 22rpx;
     font-weight: 600;
 }
@@ -75,14 +77,14 @@
 .chip-name {
     margin-left: 12rpx;
     font-size: 24rpx;
-    color: #3f4650;
+    color: var(--ink-soft);
 }
 
 .signed-badge {
     padding: 22rpx 28rpx;
     border-radius: 20rpx;
-    background: #eef2fb;
-    color: #2f6ae0;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
     font-size: 27rpx;
     text-align: center;
     margin-bottom: 20rpx;

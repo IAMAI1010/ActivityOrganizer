@@ -1,6 +1,14 @@
 <script setup>
 import { onUnmounted, ref } from 'vue'
 import { cloud } from '../cloud'
+import { applyTheme, loadTheme, THEMES, THEME_LABELS } from '../theme'
+
+const theme = ref(loadTheme())
+
+function setTheme(next) {
+    theme.value = next
+    applyTheme(next)
+}
 
 const props = defineProps({
     bootError: { type: String, default: '' },
@@ -110,6 +118,23 @@ async function signInWith(provider) {
 
 <template>
     <div class="auth-screen">
+        <div class="auth-theme">
+            <div class="theme-switch" role="group" aria-label="界面配色">
+                <button
+                    v-for="option in THEMES"
+                    :key="option"
+                    class="theme-opt"
+                    :class="{ active: theme === option }"
+                    type="button"
+                    :aria-pressed="theme === option"
+                    @click="setTheme(option)"
+                >
+                    <span class="theme-dot" :class="`dot-${option}`"></span>
+                    {{ THEME_LABELS[option] }}
+                </button>
+            </div>
+        </div>
+
         <div class="auth-card">
             <div class="auth-brand">
                 <span class="auth-mark">活</span>

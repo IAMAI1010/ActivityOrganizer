@@ -3,9 +3,24 @@ import { computed, onMounted, ref } from 'vue'
 import { cloud } from './cloud'
 import { listActivities, listSignups } from './api'
 import { activityStatusLabel, formatRange } from './format'
+import { applyTheme, loadTheme, THEMES, THEME_LABELS } from './theme'
 import ActivityEditor from './components/ActivityEditor.vue'
 import LoginView from './components/LoginView.vue'
 import SignupPanel from './components/SignupPanel.vue'
+
+const theme = ref(loadTheme())
+
+function setTheme(next) {
+    theme.value = next
+    applyTheme(next)
+}
+
+const topbarText = computed(() => {
+    if (mode.value === 'editor') {
+        return editingActivity.value ? `正在编辑 · ${editingActivity.value.title}` : '正在新建活动'
+    }
+    return `共 ${activities.value.length} 个活动 · ${signups.value.length} 次报名`
+})
 
 const booting = ref(true)
 const bootError = ref('')
@@ -279,6 +294,24 @@ async function handleDeleted(id) {
         </aside>
 
         <main class="main">
+            <div class="topbar">
+                <span class="topbar-title">{{ topbarText }}</span>
+                <div class="theme-switch" role="group" aria-label="界面配色">
+                    <button
+                        v-for="option in THEMES"
+                        :key="option"
+                        class="theme-opt"
+                        :class="{ active: theme === option }"
+                        type="button"
+                        :aria-pressed="theme === option"
+                        @click="setTheme(option)"
+                    >
+                        <span class="theme-dot" :class="`dot-${option}`"></span>
+                        {{ THEME_LABELS[option] }}
+                    </button>
+                </div>
+            </div>
+
             <ActivityEditor
                 v-if="mode === 'editor'"
                 :activity="editingActivity"
@@ -289,6 +322,8 @@ async function handleDeleted(id) {
             />
 
             <div v-else-if="selected" class="main-inner">
+                <div v-if="selected.cover_url" class="cover-hero" :style="thumbStyle(selected)"></div>
+
                 <div class="detail-head">
                     <div>
                         <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap">
@@ -298,11 +333,6 @@ async function handleDeleted(id) {
                             </span>
                             <span v-if="!canEdit" class="badge readonly">只读</span>
                         </div>
-                        <div class="detail-meta">
-                            <span>{{ formatRange(selected.start_at, selected.end_at) || '未设置时间' }}</span>
-                            <span>{{ selected.location || '未设置地点' }}</span>
-                            <span>{{ signupsOfSelected.length }} 人已报名</span>
-                        </div>
                     </div>
                     <div class="detail-actions">
                         <button v-if="canEdit" class="btn btn-primary btn-sm" type="button" @click="startEdit(selected)">
@@ -310,6 +340,21 @@ async function handleDeleted(id) {
                         </button>
                         <button class="btn btn-outline btn-sm" type="button" @click="loadAll">刷新</button>
                     </div>
+                </div>
+
+                <div class="meta-chips">
+                    <span class="chip chip-time">
+                        <span class="chip-dot"></span>
+                        {{ formatRange(selected.start_at, selected.end_at) || '未设置时间' }}
+                    </span>
+                    <span class="chip chip-place">
+                        <span class="chip-dot"></span>
+                        {{ selected.location || '未设置地点' }}
+                    </span>
+                    <span class="chip chip-count">
+                        <span class="chip-dot"></span>
+                        {{ signupsOfSelected.length }} 人已报名
+                    </span>
                 </div>
 
                 <div v-if="selected.description" class="panel">
@@ -343,7 +388,7 @@ async function handleDeleted(id) {
 
             <div v-else class="blank">
                 <div style="text-align: center">
-                    <p style="margin-bottom: 12px">还没有选中活动。</p>
+                    <p style="margin-bottom: 12px">左侧选择一个活动查看详情，或者从这里开始创建。</p>
                     <button class="btn btn-primary btn-sm" type="button" @click="startCreate">创建第一个活动</button>
                 </div>
             </div>
