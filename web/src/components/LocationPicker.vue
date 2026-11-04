@@ -28,12 +28,14 @@ const picked = ref({ address: '', latitude: null, longitude: null })
 let TMap = null
 let map = null
 let markers = null
+let geocodeTimer = null
 
 const canConfirm = computed(
     () => picked.value.latitude !== null && picked.value.longitude !== null
 )
 
 function destroyMap() {
+    stopGeocode()
     if (map) {
         map.destroy()
         map = null
@@ -50,7 +52,7 @@ function startPoint() {
     return { ...DEFAULT_CENTER, fromExisting: false }
 }
 
-async function setPoint(latitude, longitude, presetAddress) {
+function setPoint(latitude, longitude, presetAddress) {
     picked.value = {
         address: presetAddress === undefined ? picked.value.address : presetAddress,
         latitude,
@@ -61,9 +63,32 @@ async function setPoint(latitude, longitude, presetAddress) {
             { id: 'picked', position: new TMap.LatLng(latitude, longitude) },
         ])
     }
-    if (presetAddress !== undefined) return
+    if (presetAddress !== undefined) {
+        stopGeocode()
+        return
+    }
+    scheduleGeocode(latitude, longitude)
+}
 
+// 逆地址解析会消耗地图 key 的每日额度，连续点图时只解析最后一次。
+function stopGeocode() {
+    if (geocodeTimer) {
+        window.clearTimeout(geocodeTimer)
+        geocodeTimer = null
+    }
+    geocoding.value = false
+}
+
+function scheduleGeocode(latitude, longitude) {
+    stopGeocode()
     geocoding.value = true
+    geocodeTimer = window.setTimeout(() => {
+        geocodeTimer = null
+        runGeocode(latitude, longitude)
+    }, 700)
+}
+
+async function runGeocode(latitude, longitude) {
     geocodeError.value = ''
     try {
         const address = await reverseGeocode(TMap, latitude, longitude)
