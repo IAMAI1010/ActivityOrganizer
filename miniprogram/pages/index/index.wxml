@@ -1,0 +1,52 @@
+<view class="page">
+    <view class="hero">
+        <text class="eyebrow">ACTIVITY ORGANIZER</text>
+        <text class="title">活动报名</text>
+        <text class="subtitle">在电脑端编辑活动，分享卡片到群里，报名自动汇总。</text>
+    </view>
+
+    <view class="card entry-card" bindtap="openMine">
+        <view class="entry-main">
+            <text class="entry-label">我报名的活动</text>
+            <text class="entry-value">{{signedCount}} 场</text>
+        </view>
+        <text class="entry-arrow">›</text>
+    </view>
+
+    <view class="section-head">
+        <text class="section-title">近期活动</text>
+        <text class="section-link" bindtap="handleRetry">刷新</text>
+    </view>
+
+    <view class="state-card" wx:if="{{viewState === 'loading'}}">
+        <view class="spinner"></view>
+        <text class="state-title">正在加载活动</text>
+        <text class="state-description">正在从云端读取最新活动，请稍候。</text>
+    </view>
+
+    <view class="state-card" wx:elif="{{viewState === 'empty'}}">
+        <text class="state-icon">○</text>
+        <text class="state-title">暂时还没有活动</text>
+        <text class="state-description">在电脑端发布活动后，这里会出现活动卡片。</text>
+        <text class="state-description">好友分享给你的活动卡片，点开即可直接报名。</text>
+    </view>
+
+    <view class="state-card" wx:elif="{{viewState === 'error'}}">
+        <text class="state-icon">!</text>
+        <text class="state-title">加载失败</text>
+        <text class="state-description">{{errorMessage}}</text>
+        <button class="primary-button" bindtap="handleRetry">重新加载</button>
+    </view>
+
+    <view wx:else>
+        <view class="card activity-card" wx:for="{{activities}}" wx:key="id" data-id="{{item.id}}" bindtap="openDetail">
+            <text class="card-title">{{item.title}}</text>
+            <view class="card-meta">
+                <text class="meta-row" wx:if="{{item.timeText}}">{{item.timeText}}</text>
+                <text class="meta-row" wx:if="{{item.location}}">{{item.location}}</text>
+            </view>
+        </view>
+    </view>
+
+    <text class="footer-tip">从群里的活动卡片可以直接打开并报名。</text>
+</view>

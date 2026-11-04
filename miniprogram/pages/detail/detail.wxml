@@ -1,0 +1,60 @@
+<view class="page">
+    <view class="state-card" wx:if="{{viewState === 'loading'}}">
+        <view class="spinner"></view>
+        <text class="state-title">正在加载活动</text>
+        <text class="state-description">请稍候。</text>
+    </view>
+
+    <view class="state-card" wx:elif="{{viewState === 'error'}}">
+        <text class="state-icon">!</text>
+        <text class="state-title">无法打开活动</text>
+        <text class="state-description">{{errorMessage}}</text>
+        <button class="primary-button" bindtap="handleRetry">重新加载</button>
+    </view>
+
+    <block wx:else>
+        <view class="tip-banner" wx:if="{{submittedTip}}">报名成功，期待你的参与。</view>
+
+        <view class="cover" wx:if="{{activity.cover_url}}">
+            <image class="cover-image" src="{{activity.cover_url}}" mode="aspectFill"></image>
+        </view>
+
+        <view class="card">
+            <text class="card-title">{{activity.title}}</text>
+            <view class="card-meta">
+                <text class="meta-row" wx:if="{{activity.timeText}}">{{activity.timeText}}</text>
+                <text class="meta-row" wx:if="{{activity.location}}">{{activity.location}}</text>
+                <text class="meta-row" wx:if="{{activity.owner_name}}">发起人：{{activity.owner_name}}</text>
+            </view>
+        </view>
+
+        <view class="card" wx:if="{{activity.description}}">
+            <text class="block-title">活动介绍</text>
+            <text class="description">{{activity.description}}</text>
+        </view>
+
+        <view class="card">
+            <view class="section-head">
+                <text class="block-title">已报名 {{signupCount}} 人</text>
+                <text class="section-link" bindtap="goMine">我的报名</text>
+            </view>
+            <view class="signup-list" wx:if="{{signupCount > 0}}">
+                <view class="signup-chip" wx:for="{{signups}}" wx:key="id">
+                    <image class="avatar" wx:if="{{item.avatar_url}}" src="{{item.avatar_url}}" mode="aspectFill"></image>
+                    <text class="avatar avatar-text" wx:else>{{item.initial}}</text>
+                    <text class="chip-name">{{item.name}}</text>
+                </view>
+            </view>
+            <text class="state-description" wx:else>还没有人报名，快来做第一个吧。</text>
+        </view>
+
+        <view class="signed-badge" wx:if="{{signedUp}}">你已经报名了这场活动</view>
+
+        <view class="action-bar">
+            <button class="primary-button action-main" bindtap="goSignup" disabled="{{signedUp}}">{{signedUp ? '已报名' : '立即报名'}}</button>
+            <button class="ghost-button action-share" open-type="share">分享到群</button>
+        </view>
+
+        <text class="footer-tip">分享后，好友在聊天里点开卡片即可填写报名信息。</text>
+    </block>
+</view>

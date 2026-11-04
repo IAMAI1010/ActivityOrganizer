@@ -1,0 +1,37 @@
+.entry-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.entry-main {
+    display: flex;
+    flex-direction: column;
+}
+
+.entry-label {
+    font-size: 28rpx;
+    color: #646a73;
+}
+
+.entry-value {
+    margin-top: 8rpx;
+    font-size: 36rpx;
+    font-weight: 600;
+}
+
+.entry-arrow {
+    font-size: 44rpx;
+    color: #c9ced6;
+}
+
+.activity-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.state-icon {
+    font-size: 52rpx;
+    color: #2f6ae0;
+    margin-bottom: 12rpx;
+}
