@@ -73,10 +73,22 @@
 }
 
 .poster-chip {
+    display: flex;
+    align-items: center;
     font-size: 24rpx;
     font-weight: 600;
     padding: 16rpx 30rpx;
     border-radius: 999rpx;
+}
+
+.poster-chip-text {
+    font-size: 24rpx;
+}
+
+.poster-chip-icon {
+    width: 24rpx;
+    height: 24rpx;
+    margin-right: 10rpx;
 }
 
 .cover-image {
@@ -161,19 +173,143 @@
     margin-bottom: 20rpx;
 }
 
+/* 底部操作区：主按钮独占一行居中加高，分享按钮在下一行居中。
+   微信 button 内置了固定宽度，必须用 !important 才能覆盖。 */
 .action-bar {
     display: flex;
+    justify-content: center;
     margin-top: 8rpx;
 }
 
 .action-main {
-    flex: 2;
+    flex: none;
+    width: 456rpx !important;
+    height: 96rpx;
+    line-height: 96rpx;
+    font-size: 32rpx;
+    font-weight: 600;
+    border-radius: 20rpx;
     margin-top: 0;
 }
 
+.action-sub {
+    display: flex;
+    justify-content: center;
+    margin-top: 24rpx;
+}
+
 .action-share {
-    flex: 1;
-    margin-left: 20rpx;
+    flex: none;
+    width: 456rpx !important;
+    height: 88rpx;
+    font-size: 28rpx;
+    border-radius: 20rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 通用分享图标（托盘 + 上箭头），颜色跟随文字 */
+.icon-share {
+    position: relative;
+    width: 30rpx;
+    height: 36rpx;
+    margin-right: 12rpx;
+    flex: none;
+}
+
+.icon-share-box {
+    position: absolute;
+    bottom: 0;
+    left: 2rpx;
+    right: 2rpx;
+    height: 22rpx;
+    border: 3rpx solid currentColor;
+    border-top: none;
+    border-radius: 0 0 6rpx 6rpx;
+    box-sizing: border-box;
+}
+
+.icon-share-stem {
+    position: absolute;
+    left: 50%;
+    margin-left: -1.5rpx;
+    top: 7rpx;
+    width: 3rpx;
+    height: 11rpx;
+    border-radius: 2rpx;
+    background: currentColor;
+}
+
+.icon-share-tip {
+    position: absolute;
+    left: 50%;
+    margin-left: -7rpx;
+    top: 0;
+    width: 14rpx;
+    height: 14rpx;
+    box-sizing: border-box;
+    border-top: 3rpx solid currentColor;
+    border-left: 3rpx solid currentColor;
+    border-top-left-radius: 2rpx;
+    transform: rotate(45deg);
+}
+
+/* 通用扫码图标（四角括号 + 扫描线），颜色跟随文字 */
+.icon-scan {
+    position: relative;
+    width: 24rpx;
+    height: 24rpx;
+    flex: none;
+}
+
+.scan-corner {
+    position: absolute;
+    width: 9rpx;
+    height: 9rpx;
+}
+
+.scan-corner.tl {
+    left: 0;
+    top: 0;
+    border-left: 3rpx solid currentColor;
+    border-top: 3rpx solid currentColor;
+    border-top-left-radius: 4rpx;
+}
+
+.scan-corner.tr {
+    right: 0;
+    top: 0;
+    border-right: 3rpx solid currentColor;
+    border-top: 3rpx solid currentColor;
+    border-top-right-radius: 4rpx;
+}
+
+.scan-corner.bl {
+    left: 0;
+    bottom: 0;
+    border-left: 3rpx solid currentColor;
+    border-bottom: 3rpx solid currentColor;
+    border-bottom-left-radius: 4rpx;
+}
+
+.scan-corner.br {
+    right: 0;
+    bottom: 0;
+    border-right: 3rpx solid currentColor;
+    border-bottom: 3rpx solid currentColor;
+    border-bottom-right-radius: 4rpx;
+}
+
+.scan-line {
+    position: absolute;
+    left: 4rpx;
+    right: 4rpx;
+    top: 50%;
+    margin-top: -2rpx;
+    height: 4rpx;
+    border-radius: 4rpx;
+    background: currentColor;
 }
 
 .meta-place {

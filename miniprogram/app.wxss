@@ -3,28 +3,28 @@
    每个页面根节点加 theme-{{theme}} 类，即可整体换肤。
    ========================================================== */
 page {
-    --bg: #f5f7fa;
+    --bg: #f4f3ef;
     --surface: #ffffff;
-    --surface-soft: #f7f8fa;
-    --ink: #1f2329;
-    --ink-soft: #3f4650;
-    --muted: #8a9099;
-    --faint: #9aa1ab;
-    --line: #f0f2f5;
-    --accent: #2f6ae0;
-    --accent-strong: #1f4fbf;
-    --accent-soft: #eef2fb;
+    --surface-soft: #faf9f6;
+    --ink: #1a1d21;
+    --ink-soft: #40454d;
+    --muted: #7a818c;
+    --faint: #8f8b84;
+    --line: #e7e4dd;
+    --accent: #0f8f6f;
+    --accent-strong: #0b7259;
+    --accent-soft: #e6f4ef;
     --accent-contrast: #ffffff;
-    --hero-a: #1f3a8a;
-    --hero-b: #2f6ae0;
-    --hero-ink: #ffffff;
+    --hero-a: #0b3d31;
+    --hero-b: #12805f;
+    --hero-ink: #f4f1ea;
     --danger: #c0392b;
     --danger-soft: #fdecec;
     --ok: #2f7a4a;
     --ok-soft: #e7f6ec;
-    --chip-bg: #f2f5fb;
-    --avatar-bg: #d7e2f7;
-    --shadow: rgba(31, 58, 138, 0.06);
+    --chip-bg: #f0eee8;
+    --avatar-bg: #d5ece3;
+    --shadow: rgba(26, 29, 33, 0.06);
 
     min-height: 100%;
     background: var(--bg);
@@ -221,10 +221,11 @@ button::after {
     font-size: 30rpx;
 }
 
+/* 微信 button 自带的 disabled 样式优先级很高，需要 !important 才能覆盖。 */
 .primary-button[disabled] {
-    background: var(--accent);
-    color: var(--accent-contrast);
-    opacity: 0.55;
+    background: var(--accent-soft) !important;
+    color: var(--accent-strong) !important;
+    opacity: 1 !important;
 }
 
 .ghost-button {

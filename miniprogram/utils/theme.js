@@ -10,7 +10,7 @@ const CHROME = {
     light: {
         navigationBarBackgroundColor: '#ffffff',
         navigationBarTextStyle: 'black',
-        backgroundColor: '#f5f7fa',
+        backgroundColor: '#f4f3ef',
     },
     dark: {
         navigationBarBackgroundColor: '#17181b',

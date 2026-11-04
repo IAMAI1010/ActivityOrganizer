@@ -26,7 +26,16 @@
                 </view>
                 <view class="poster-foot">
                     <text class="poster-org" style="color:{{poster.dim}}" wx:if="{{activity.owner_name}}">组织者 {{activity.owner_name}}</text>
-                    <text class="poster-chip" style="{{poster.chipStyle}}">{{poster.footer}}</text>
+                    <view class="poster-chip" style="{{poster.chipStyle}}">
+                        <view class="icon-scan poster-chip-icon">
+                            <view class="scan-corner tl"></view>
+                            <view class="scan-corner tr"></view>
+                            <view class="scan-corner bl"></view>
+                            <view class="scan-corner br"></view>
+                            <view class="scan-line"></view>
+                        </view>
+                        <text class="poster-chip-text">{{poster.footer}}</text>
+                    </view>
                 </view>
             </view>
         </view>
@@ -73,7 +82,16 @@
             <button wx:if="{{activity.closed}}" class="primary-button action-main" disabled>活动已结束</button>
             <button wx:elif="{{signedUp}}" class="primary-button action-main" bindtap="goSignup" disabled>已报名</button>
             <button wx:else class="primary-button action-main" bindtap="goSignup">立即报名</button>
-            <button class="ghost-button action-share" open-type="share">分享到群</button>
+        </view>
+        <view class="action-sub">
+            <button class="ghost-button action-share" open-type="share">
+                <view class="icon-share">
+                    <view class="icon-share-box"></view>
+                    <view class="icon-share-stem"></view>
+                    <view class="icon-share-tip"></view>
+                </view>
+                <text>分享到群</text>
+            </button>
         </view>
 
         <text class="footer-tip">分享后，好友在聊天里点开卡片即可填写报名信息。</text>

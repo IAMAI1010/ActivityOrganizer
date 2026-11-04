@@ -93,6 +93,12 @@
 
 .submit-button {
     margin-top: 20rpx;
+    width: 100% !important;
+    height: 96rpx;
+    line-height: 96rpx;
+    font-size: 32rpx;
+    font-weight: 600;
+    border-radius: 20rpx;
 }
 
 .state-icon {
