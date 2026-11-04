@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from 'vue'
 import { cloud } from './cloud'
 import { listActivities, listSignups } from './api'
 import { activityStatusLabel, formatRange } from './format'
+import { hasPoint, tmapMarkerUri } from './nav'
 import { applyTheme, loadTheme, THEMES, THEME_LABELS } from './theme'
 import ActivityEditor from './components/ActivityEditor.vue'
 import LoginView from './components/LoginView.vue'
@@ -350,6 +351,15 @@ async function handleDeleted(id) {
                     <span class="chip chip-place">
                         <span class="chip-dot"></span>
                         {{ selected.location || '未设置地点' }}
+                        <a
+                            v-if="hasPoint(selected)"
+                            class="chip-nav"
+                            :href="tmapMarkerUri({ latitude: selected.latitude, longitude: selected.longitude, name: selected.title, address: selected.location })"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            导航
+                        </a>
                     </span>
                     <span class="chip chip-count">
                         <span class="chip-dot"></span>

@@ -3,7 +3,9 @@ import { computed, nextTick, reactive, ref, watch } from 'vue'
 import { createActivity, updateActivity, deleteActivity } from '../api'
 import { formatRange, fromLocalInput, toLocalInput } from '../format'
 import { downloadPoster, renderPoster } from '../poster'
+import { toCoord } from '../tmap'
 import AiBar from './AiBar.vue'
+import LocationPicker from './LocationPicker.vue'
 
 const props = defineProps({
     activity: { type: Object, default: null },
@@ -15,12 +17,21 @@ const draft = reactive({
     title: '',
     description: '',
     location: '',
+    latitude: null,
+    longitude: null,
     start_at: '',
     end_at: '',
     cover_url: '',
     cover_spec: null,
     status: 'published',
 })
+
+const showMap = ref(false)
+// 手动改了地点文字但没重新选点时提示一下，避免导航跳到旧位置。
+const coordStale = ref(false)
+const hasCoord = computed(
+    () => draft.latitude !== null && draft.longitude !== null
+)
 
 const fields = ref([])
 const saving = ref(false)
@@ -36,6 +47,9 @@ function loadFrom(activity) {
     draft.title = activity ? activity.title || '' : ''
     draft.description = activity ? activity.description || '' : ''
     draft.location = activity ? activity.location || '' : ''
+    draft.latitude = activity ? toCoord(activity.latitude) : null
+    draft.longitude = activity ? toCoord(activity.longitude) : null
+    coordStale.value = false
     draft.start_at = activity ? toLocalInput(activity.start_at) : ''
     draft.end_at = activity ? toLocalInput(activity.end_at) : ''
     draft.cover_url = activity ? activity.cover_url || '' : ''
@@ -146,6 +160,24 @@ function clearPoster() {
     draft.cover_spec = null
 }
 
+function onLocationInput() {
+    if (hasCoord.value) coordStale.value = true
+}
+
+function onPickLocation({ address, latitude, longitude }) {
+    if (address) draft.location = address
+    draft.latitude = toCoord(latitude)
+    draft.longitude = toCoord(longitude)
+    coordStale.value = false
+    showMap.value = false
+}
+
+function clearCoord() {
+    draft.latitude = null
+    draft.longitude = null
+    coordStale.value = false
+}
+
 function downloadCurrentPoster() {
     if (!draft.cover_spec) return
     downloadPoster(draft.cover_spec, posterMeta.value, `${draft.title || '活动'}-封面.png`)
@@ -156,6 +188,8 @@ function buildPayload() {
         title: draft.title.trim(),
         description: draft.description.trim() || null,
         location: draft.location.trim() || null,
+        latitude: draft.latitude,
+        longitude: draft.longitude,
         start_at: fromLocalInput(draft.start_at),
         end_at: fromLocalInput(draft.end_at),
         cover_url: draft.cover_url.trim() || null,
@@ -275,7 +309,28 @@ async function remove() {
 
                     <div class="field" style="margin-bottom: 0">
                         <label class="label" for="ed-location">活动地点</label>
-                        <input id="ed-location" v-model="draft.location" class="input" placeholder="例如：梧桐山北门集合点" />
+                        <div class="loc-row">
+                            <input
+                                id="ed-location"
+                                v-model="draft.location"
+                                class="input"
+                                placeholder="例如：梧桐山北门集合点"
+                                @input="onLocationInput"
+                            />
+                            <button class="btn btn-outline btn-sm loc-pick" type="button" @click="showMap = true">
+                                {{ hasCoord ? '重新选点' : '地图选点' }}
+                            </button>
+                        </div>
+                        <div v-if="hasCoord" class="loc-coord">
+                            <span class="loc-coord-text">
+                                已标点 {{ draft.latitude.toFixed(5) }}, {{ draft.longitude.toFixed(5) }}
+                            </span>
+                            <button v-if="coordStale" class="loc-stale" type="button" @click="showMap = true">
+                                地点文字已改动，点这里重新标点
+                            </button>
+                            <button class="btn btn-ghost btn-sm" type="button" @click="clearCoord">清除标点</button>
+                        </div>
+                        <p v-else class="hint">只填文字也能发布；在地图上标点后，活动卡会多一个一键导航。</p>
                     </div>
                 </div>
 
@@ -410,6 +465,7 @@ async function remove() {
                         <div class="preview-meta">
                             <span>{{ previewRange || '未设置时间' }}</span>
                             <span>{{ draft.location || '未设置地点' }}</span>
+                            <span v-if="hasCoord" class="preview-nav">可导航</span>
                         </div>
                         <div class="preview-foot">
                             {{ draft.status === 'draft' ? '草稿 · 仅自己可见' : '已发布 · 好友可点击卡片报名' }}
@@ -418,5 +474,14 @@ async function remove() {
                 </div>
             </div>
         </div>
+
+        <LocationPicker
+            :open="showMap"
+            :address="draft.location"
+            :latitude="draft.latitude"
+            :longitude="draft.longitude"
+            @close="showMap = false"
+            @pick="onPickLocation"
+        />
     </div>
 </template>

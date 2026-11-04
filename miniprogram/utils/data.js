@@ -1,6 +1,6 @@
 const { cloud } = require('./cloud');
 
-const ACTIVITY_COLUMNS = 'id,title,description,location,start_at,end_at,cover_url,cover_spec,form_fields,status,owner_name,created_at';
+const ACTIVITY_COLUMNS = 'id,title,description,location,latitude,longitude,start_at,end_at,cover_url,cover_spec,form_fields,status,owner_name,created_at';
 const SIGNUP_BRIEF_COLUMNS = 'id,activity_id,nickname,avatar_url,created_at';
 const LOCAL_SIGNUPS_KEY = 'activityOrganizer.signedUp';
 

@@ -175,3 +175,26 @@
     flex: 1;
     margin-left: 20rpx;
 }
+
+.meta-place {
+    display: flex;
+    align-items: center;
+    gap: 12rpx;
+}
+
+.meta-place-text {
+    flex: 1;
+    min-width: 0;
+    font-size: 26rpx;
+    color: var(--muted);
+    line-height: 1.8;
+}
+
+.meta-place-nav {
+    flex: none;
+    padding: 2rpx 16rpx;
+    border-radius: 999rpx;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    font-size: 22rpx;
+}

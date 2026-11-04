@@ -39,7 +39,10 @@
             <text class="card-title">{{activity.title}}</text>
             <view class="card-meta">
                 <text class="meta-row" wx:if="{{activity.timeText}}">{{activity.timeText}}</text>
-                <text class="meta-row" wx:if="{{activity.location}}">{{activity.location}}</text>
+                <view class="meta-row meta-place" wx:if="{{activity.location}}">
+                    <text class="meta-place-text">{{activity.location}}</text>
+                    <text class="meta-place-nav" wx:if="{{activity.hasPoint}}" bindtap="openLocation">地图</text>
+                </view>
                 <text class="meta-row" wx:if="{{activity.owner_name}}">发起人：{{activity.owner_name}}</text>
             </view>
         </view>

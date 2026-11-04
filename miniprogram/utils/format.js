@@ -32,14 +32,25 @@ function formatTimeRange(startAt, endAt) {
         : `${startText} - ${formatDateText(endAt)} ${formatClock(end)}`;
 }
 
+function toCoordinate(value) {
+    if (value === null || value === undefined || value === '') return null;
+    const number = Number(value);
+    return Number.isFinite(number) ? number : null;
+}
+
 function toDisplayActivity(row) {
     if (!row) return null;
     const fields = Array.isArray(row.form_fields) ? row.form_fields : [];
+    const latitude = toCoordinate(row.latitude);
+    const longitude = toCoordinate(row.longitude);
     return {
         id: row.id,
         title: row.title || '未命名活动',
         description: row.description || '',
         location: row.location || '',
+        latitude,
+        longitude,
+        hasPoint: latitude !== null && longitude !== null,
         cover_url: row.cover_url || '',
         cover_spec: row.cover_spec || null,
         owner_name: row.owner_name || '',

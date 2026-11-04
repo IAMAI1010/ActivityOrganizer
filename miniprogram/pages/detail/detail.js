@@ -108,6 +108,25 @@ Page({
         });
     },
 
+    // 打开微信内置地图：不需要地图 key，坐标由组织者在 Web 端标点写入。
+    openLocation() {
+        const activity = this.data.activity;
+        if (!activity || !activity.hasPoint) {
+            wx.showToast({ title: '组织者还没在地图上标点', icon: 'none' });
+            return;
+        }
+        wx.openLocation({
+            latitude: activity.latitude,
+            longitude: activity.longitude,
+            name: activity.title || '活动地点',
+            address: activity.location || '',
+            scale: 16,
+            fail() {
+                wx.showToast({ title: '打开地图失败，请稍后重试', icon: 'none' });
+            },
+        });
+    },
+
     goMine() {
         wx.navigateTo({
             url: '/pages/mine/mine',

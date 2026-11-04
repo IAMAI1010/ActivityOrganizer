@@ -9,3 +9,9 @@ dist/
 
 # 本地视觉自检页（仅开发机使用）
 web/.preview/
+
+# 本地环境变量（含地图 key，不要提交）
+.env
+.env.local
+web/.env
+web/.env.local

@@ -1,7 +1,7 @@
 import { cloud } from './cloud'
 
 const ACTIVITY_COLUMNS =
-    'id,owner_id,title,description,location,start_at,end_at,cover_url,cover_spec,form_fields,status,owner_name,created_at'
+    'id,owner_id,title,description,location,latitude,longitude,start_at,end_at,cover_url,cover_spec,form_fields,status,owner_name,created_at'
 const SIGNUP_COLUMNS = 'id,activity_id,nickname,name,phone,answers,created_at'
 
 function toError(error, fallback) {
